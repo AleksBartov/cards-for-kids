@@ -1,10 +1,23 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import { useFonts, Montserrat_500Medium } from '@expo-google-fonts/montserrat';
+import Card from './Card';
 
 export default function App() {
+  const letters = [ 'ПА', 'ПА', 'ПА', 'ПА', 'ПА', 'ПА' ]
+  let [fontsLoaded] = useFonts({
+    Montserrat_500Medium,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      {
+        letters.map((l,i) => <Card key={i} text={l} index={i} />)
+      }
       <StatusBar style="auto" />
     </View>
   );
@@ -13,7 +26,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#01569E',
     alignItems: 'center',
     justifyContent: 'center',
   },
