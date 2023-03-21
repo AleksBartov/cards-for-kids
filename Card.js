@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Dimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
@@ -15,12 +15,13 @@ import { snapPoint } from "react-native-redash";
 const { width, height } = Dimensions.get("window");
 
 const SNAP_POINTS = [-width, 0, width];
-const CARD_WIDTH = width * 0.65;
+const CARD_WIDTH = width * 0.6;
 const CARD_HEIGHT = CARD_WIDTH * 1.614;
 const BORDER_PADDING = 6;
 const DURATION = 250;
 
-export default function Card({ text, index, shuffleBack }) {
+export default function Card({ textArray, index, shuffleBack }) {
+  const counter = useSharedValue(0);
   const offset = useSharedValue({ x: 0, y: 0 });
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(-height);
@@ -95,7 +96,7 @@ export default function Card({ text, index, shuffleBack }) {
       <GestureDetector gesture={gesture}>
         <Animated.View style={[styles.card_container, style]}>
           <View style={styles.card_inner_border}>
-            <Text style={styles.card_text}>{text}</Text>
+            <Text style={styles.card_text}>{textArray[counter.value]}</Text>
           </View>
         </Animated.View>
       </GestureDetector>
