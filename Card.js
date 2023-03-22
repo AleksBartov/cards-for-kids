@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Dimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { Audio } from "expo-av";
 import Animated, {
   Easing,
+  runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withDelay,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
-import { snapPoint } from "react-native-redash";
+import { ReText, snapPoint } from "react-native-redash";
 
 const { width, height } = Dimensions.get("window");
 
@@ -21,7 +24,39 @@ const BORDER_PADDING = 6;
 const DURATION = 250;
 
 export default function Card({ textArray, index, shuffleBack }) {
-  const counter = useSharedValue(0);
+  const [recording, setRecording] = useState();
+
+  async function startRecording() {
+    try {
+      console.log("Requesting permissions..");
+      await Audio.requestPermissionsAsync();
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: true,
+        playsInSilentModeIOS: true,
+      });
+
+      console.log("Starting recording..");
+      const { recording } = await Audio.Recording.createAsync(
+        Audio.RecordingOptionsPresets.HIGH_QUALITY
+      );
+      setRecording(recording);
+      console.log("Recording started");
+    } catch (err) {
+      console.error("Failed to start recording", err);
+    }
+  }
+
+  async function stopRecording() {
+    console.log("Stopping recording..");
+    setRecording(undefined);
+    await recording.stopAndUnloadAsync();
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+    });
+    const uri = recording.getURI();
+    console.log("Recording stopped and stored at", uri);
+  }
+
   const offset = useSharedValue({ x: 0, y: 0 });
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(-height);
@@ -30,6 +65,7 @@ export default function Card({ textArray, index, shuffleBack }) {
   const rotateX = useSharedValue(30);
   const delay = index * DURATION;
   const theta = -10 + Math.random() * 20;
+  const step = useSharedValue(0);
 
   useEffect(() => {
     translateY.value = withDelay(
@@ -61,6 +97,7 @@ export default function Card({ textArray, index, shuffleBack }) {
       rotateX.value = withTiming(0);
       rotateZ.value = withTiming(0);
       scale.value = withTiming(1.1);
+      // runOnJS(startRecording)();
     })
     .onUpdate(({ translationX, translationY }) => {
       translateX.value = offset.value.x + translationX;
@@ -74,10 +111,14 @@ export default function Card({ textArray, index, shuffleBack }) {
       scale.value = withTiming(1, {}, () => {
         const isLast = index === 0;
         const isSwaptLeftOrRight = dest !== 0;
+        if (isSwaptLeftOrRight) {
+          step.value === textArray.length ? (step.value = 0) : step.value++;
+        }
         if (isLast && isSwaptLeftOrRight) {
           shuffleBack.value = true;
         }
       });
+      // runOnJS(stopRecording)();
     });
 
   const style = useAnimatedStyle(() => ({
@@ -91,12 +132,17 @@ export default function Card({ textArray, index, shuffleBack }) {
     ],
   }));
 
+  const date = useDerivedValue(() => {
+    const d = textArray[step.value];
+    return d;
+  });
+
   return (
     <View style={styles.box} pointerEvents="box-none">
       <GestureDetector gesture={gesture}>
         <Animated.View style={[styles.card_container, style]}>
           <View style={styles.card_inner_border}>
-            <Text style={styles.card_text}>{textArray[counter.value]}</Text>
+            <ReText style={styles.card_text} text={date} />
           </View>
         </Animated.View>
       </GestureDetector>
