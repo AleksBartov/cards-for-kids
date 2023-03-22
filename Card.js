@@ -14,6 +14,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { ReText, snapPoint } from "react-native-redash";
+import { Nunito_500Medium } from "@expo-google-fonts/nunito";
 
 const { width, height } = Dimensions.get("window");
 
@@ -185,5 +186,6 @@ const styles = StyleSheet.create({
   card_text: {
     color: "#2C3941",
     fontSize: CARD_WIDTH - 130,
+    fontFamily: "Nunito_500Medium",
   },
 });

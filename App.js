@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View } from "react-native";
-import { useFonts, Montserrat_500Medium } from "@expo-google-fonts/montserrat";
+import { useFonts, Nunito_500Medium } from "@expo-google-fonts/nunito";
 import Card from "./Card";
 import { useSharedValue } from "react-native-reanimated";
 import { useEffect } from "react";
@@ -31,7 +31,7 @@ export default function App() {
   const shuffleBack = useSharedValue(false);
 
   let [fontsLoaded] = useFonts({
-    Montserrat_500Medium,
+    Nunito_500Medium,
   });
 
   if (!fontsLoaded) {
