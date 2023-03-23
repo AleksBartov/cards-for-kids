@@ -6,6 +6,7 @@ import { useSharedValue } from "react-native-reanimated";
 import { useEffect } from "react";
 import { Audio } from "expo-av";
 import { vowels, consonants, LENGTH } from "./CONSTANTS";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const words = consonants
   .flatMap((con) => {
@@ -39,12 +40,12 @@ export default function App() {
   }
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       {words.map((l, i) => (
         <Card key={i} textArray={l} index={i} shuffleBack={shuffleBack} />
       ))}
       <StatusBar style="auto" />
-    </View>
+    </GestureHandlerRootView>
   );
 }
 

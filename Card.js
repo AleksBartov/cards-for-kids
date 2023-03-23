@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Dimensions } from "react-native";
+import { StyleSheet, View, Platform, Dimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { Audio } from "expo-av";
 import Animated, {
@@ -63,7 +63,7 @@ export default function Card({ textArray, index, shuffleBack }) {
   const translateY = useSharedValue(-height);
   const scale = useSharedValue(1);
   const rotateZ = useSharedValue(0);
-  const rotateX = useSharedValue(30);
+  const rotateX = useSharedValue(Platform.OS === "ios" ? 30 : 5);
   const delay = index * DURATION;
   const theta = -10 + Math.random() * 20;
   const step = useSharedValue(0);
@@ -108,7 +108,7 @@ export default function Card({ textArray, index, shuffleBack }) {
       const dest = snapPoint(translateX.value, velocityX, SNAP_POINTS);
       translateX.value = withSpring(dest, { velocity: velocityX });
       translateY.value = withSpring(0, { velocity: velocityY });
-      rotateX.value = withTiming(30);
+      rotateX.value = withTiming(Platform.OS === "ios" ? 30 : 5);
       scale.value = withTiming(1, {}, () => {
         const isLast = index === 0;
         const isSwaptLeftOrRight = dest !== 0;
