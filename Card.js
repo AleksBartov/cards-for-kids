@@ -113,7 +113,7 @@ export default function Card({ textArray, index, shuffleBack }) {
         const isLast = index === 0;
         const isSwaptLeftOrRight = dest !== 0;
         if (isSwaptLeftOrRight) {
-          step.value === textArray.length ? (step.value = 0) : step.value++;
+          step.value === textArray.length - 1 ? (step.value = 0) : step.value++;
         }
         if (isLast && isSwaptLeftOrRight) {
           shuffleBack.value = true;

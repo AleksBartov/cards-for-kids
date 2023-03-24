@@ -1,29 +1,28 @@
 {
   "expo": {
-    "name": "cards-for-kids",
-    "slug": "cards-for-kids",
-    "version": "1.0.0",
+    "name": "Учу слога",
+    "slug": "Учу слога",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#01569E"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.aleksbartov.cardsforkids"
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#01569E"
       },
-      "package": "com.aleksbartov.cardsforkids"
+      "package": "com.aleksbartov.cardsforkids",
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"
