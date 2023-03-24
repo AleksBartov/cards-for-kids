@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Учу слога",
+    "name": "Учу слоги",
     "slug": "cards-for-kids",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,11 +18,11 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/icon.png",
+        "foregroundImage": "./assets/appIconForAndroid.png",
         "backgroundColor": "#01569E"
       },
       "package": "com.aleksbartov.cardsforkids",
-      "versionCode": 3
+      "versionCode": 4
     },
     "web": {
       "favicon": "./assets/favicon.png"
