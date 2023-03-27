@@ -1,12 +1,14 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { useFonts, Nunito_500Medium } from "@expo-google-fonts/nunito";
-import Card from "./Card";
+import Card from "../Card";
 import { useSharedValue } from "react-native-reanimated";
 import { useEffect } from "react";
 import { Audio } from "expo-av";
-import { vowels, consonants, LENGTH } from "./CONSTANTS";
+import { vowels, consonants, LENGTH } from "../CONSTANTS";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useRouter } from "expo-router";
 
 const words = consonants
   .flatMap((con) => {
@@ -29,6 +31,7 @@ const words = consonants
   }, []);
 
 export default function App() {
+  const route = useRouter();
   const shuffleBack = useSharedValue(false);
 
   let [fontsLoaded] = useFonts({
@@ -41,6 +44,16 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={styles.container}>
+      <Pressable
+        style={{ marginLeft: 20, marginTop: 40 }}
+        onPress={() => route.back("/")}
+      >
+        <MaterialCommunityIcons
+          name="keyboard-backspace"
+          size={32}
+          color="#EEF2F5"
+        />
+      </Pressable>
       {words.map((l, i) => (
         <Card key={i} textArray={l} index={i} shuffleBack={shuffleBack} />
       ))}

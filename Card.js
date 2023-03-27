@@ -60,7 +60,7 @@ export default function Card({ textArray, index, shuffleBack }) {
 
   const offset = useSharedValue({ x: 0, y: 0 });
   const translateX = useSharedValue(0);
-  const translateY = useSharedValue(-height);
+  const translateY = useSharedValue(-1000);
   const scale = useSharedValue(1);
   const rotateZ = useSharedValue(0);
   const rotateX = useSharedValue(Platform.OS === "ios" ? 30 : 5);
