@@ -1,8 +1,9 @@
 import { Pressable, StyleSheet, Dimensions, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MemoItem from "../components/memo/MemoItem";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const { width, height } = Dimensions.get("window");
 
@@ -13,13 +14,16 @@ const COLUMNS = 3;
 const ITEM_SIZE = Math.floor(
   (width - PADDING_HOR * 2 - GAP * (COLUMNS - 1)) / COLUMNS
 );
-const ROWS = Math.floor((height - PADDING_TOP) / ITEM_SIZE);
+const PRE_ROWS = Math.floor((height - PADDING_TOP) / (ITEM_SIZE + GAP));
+const ROWS = PRE_ROWS % 2 === 0 ? PRE_ROWS : PRE_ROWS - 1;
 const ITEMS = COLUMNS * ROWS;
+const items_data = new Array(ITEMS).fill(null);
 
 export default function memo() {
+  const [openedItems, setOpenedItems] = useState([]);
   const route = useRouter();
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <Pressable
         style={{ ...StyleSheet.absoluteFill, marginLeft: 20, marginTop: 40 }}
         onPress={() => route.back("/")}
@@ -31,11 +35,11 @@ export default function memo() {
         />
       </Pressable>
       <View style={styles.box}>
-        {new Array(ITEMS).fill(null).map((_, index) => {
+        {items_data.map((_, index) => {
           return <MemoItem key={index} index={index} itemSize={ITEM_SIZE} />;
         })}
       </View>
-    </View>
+    </GestureHandlerRootView>
   );
 }
 
