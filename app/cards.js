@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { Pressable, StyleSheet, View } from "react-native";
 import { useFonts, Nunito_500Medium } from "@expo-google-fonts/nunito";
 import Card from "../Card";
-import { useSharedValue } from "react-native-reanimated";
+import Animated, { useSharedValue } from "react-native-reanimated";
 import { useEffect } from "react";
 import { Audio } from "expo-av";
 import { vowels, consonants, LENGTH } from "../CONSTANTS";
