@@ -10,18 +10,21 @@ const { width, height } = Dimensions.get("window");
 const PADDING_HOR = 20;
 const PADDING_TOP = 120;
 const GAP = 12;
-const COLUMNS = 3;
+const COLUMNS = 2;
 const ITEM_SIZE = Math.floor(
   (width - PADDING_HOR * 2 - GAP * (COLUMNS - 1)) / COLUMNS
 );
 const PRE_ROWS = Math.floor((height - PADDING_TOP) / (ITEM_SIZE + GAP));
 const ROWS = PRE_ROWS % 2 === 0 ? PRE_ROWS : PRE_ROWS - 1;
 const ITEMS = COLUMNS * ROWS;
-const items_data = new Array(ITEMS).fill(null);
 
 export default function memo() {
   const [openedItems, setOpenedItems] = useState([]);
   const route = useRouter();
+  const clickHandler = (index) => {
+    "worklet";
+    return index;
+  };
   return (
     <GestureHandlerRootView style={styles.container}>
       <Pressable
@@ -35,8 +38,15 @@ export default function memo() {
         />
       </Pressable>
       <View style={styles.box}>
-        {items_data.map((_, index) => {
-          return <MemoItem key={index} index={index} itemSize={ITEM_SIZE} />;
+        {new Array(ITEMS).fill(null).map((_, index) => {
+          return (
+            <MemoItem
+              key={index}
+              index={index}
+              itemSize={ITEM_SIZE}
+              handleClick={clickHandler}
+            />
+          );
         })}
       </View>
     </GestureHandlerRootView>

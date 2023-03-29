@@ -14,7 +14,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
-export default function MemoItem({ index, itemSize }) {
+export default function MemoItem({ index, itemSize, handleClick }) {
   const opened = useSharedValue(false);
   const back = useSharedValue(0);
   const front = useSharedValue(180);
@@ -24,6 +24,7 @@ export default function MemoItem({ index, itemSize }) {
     opened.value = true;
     back.value = withSpring(back.value === 0 ? 180 : 0);
     front.value = withSpring(front.value === 0 ? 180 : 0);
+    handleClick(index);
   });
 
   const styleFront = useAnimatedStyle(() => {
@@ -42,11 +43,7 @@ export default function MemoItem({ index, itemSize }) {
   return (
     <Animated.View
       style={[{ width: itemSize, height: itemSize }, styles.memoCard]}
-      entering={
-        index % 2 === 0
-          ? SlideInRight.delay(index * 60)
-          : SlideInLeft.delay(index * 60)
-      }
+      entering={ZoomIn.delay(Math.random() * 700)}
     >
       <Animated.View style={[styles.backAndFront, styleFront]}>
         <Text style={{ color: "#2C3941", fontSize: itemSize / 2 }}>МА</Text>
