@@ -1,6 +1,8 @@
 import { StyleSheet, Text } from "react-native";
 import React from "react";
 import Animated, {
+  FadeInUp,
+  SlideInUp,
   SlideOutDown,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -9,11 +11,17 @@ import Animated, {
   withSpring,
   withTiming,
   ZoomIn,
-  ZoomOutEasyUp,
 } from "react-native-reanimated";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
-export default function MemoItem({ index, itemSize, text, clicked, closeAll }) {
+export default function MemoItem({
+  index,
+  itemSize,
+  text,
+  clicked,
+  closeAll,
+  twoAreOpened,
+}) {
   const opened = useSharedValue(false);
   const close = useSharedValue(false);
   const back = useSharedValue(0);
@@ -22,15 +30,21 @@ export default function MemoItem({ index, itemSize, text, clicked, closeAll }) {
   useAnimatedReaction(
     () => closeAll.value,
     (result) => {
+      // console.log(`closeAll value is: ${result}`);
       if (result && result === 1) {
-        opened.value = false;
-
-        back.value = withDelay(1000, withTiming(0));
-        front.value = withDelay(1000, withTiming(180));
-        clicked.value = false;
+        // console.log(`closeAll value checked as 1`);
+        back.value = withDelay(600, withTiming(0));
+        front.value = withDelay(
+          600,
+          withTiming(180, {}, () => {
+            opened.value = false;
+            clicked.value = false;
+          })
+        );
       } else if (result && result === 2) {
         if (opened.value) {
           close.value = true;
+          opened.value = false;
           clicked.value = false;
         }
       }
@@ -38,18 +52,23 @@ export default function MemoItem({ index, itemSize, text, clicked, closeAll }) {
   );
 
   const backGesture = Gesture.Tap().onEnd(() => {
-    // close.value = true;
-    if (opened.value) return;
-    closeAll.value = false;
-    opened.value = true;
-    back.value = withSpring(back.value === 0 ? 180 : 0);
-    front.value = withSpring(front.value === 0 ? 180 : 0);
-    clicked.value = `${index}_${text.text}`;
+    // don't touch if opened two cards
+    if (twoAreOpened.value === 2) return;
+    twoAreOpened.value++;
+    if (!opened.value) {
+      closeAll.value = false;
+      // console.log("tab clicked");
+      back.value = withSpring(back.value === 0 ? 180 : 0);
+      front.value = withSpring(front.value === 0 ? 180 : 0, {}, () => {
+        clicked.value = `${index}_${text.text}`;
+        opened.value = true;
+      });
+    }
   });
 
   const styleBox = useAnimatedStyle(() => {
     return {
-      transform: [{ scale: close.value ? withDelay(700, withTiming(0)) : 1 }],
+      transform: [{ scale: close.value ? withTiming(0) : 1 }],
     };
   });
   const styleFront = useAnimatedStyle(() => {
@@ -65,13 +84,10 @@ export default function MemoItem({ index, itemSize, text, clicked, closeAll }) {
     };
   });
 
-  // if (close.value) return null;
-
   return (
     <Animated.View
+      entering={FadeInUp.delay(Math.random() * 700).duration(600)}
       style={[{ width: itemSize, height: itemSize }, styles.memoCard, styleBox]}
-      entering={ZoomIn.delay(Math.random() * 700)}
-      exiting={SlideOutDown}
     >
       <Animated.View style={[styles.backAndFront, styleFront]}>
         <Text

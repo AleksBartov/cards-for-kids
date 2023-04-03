@@ -10,6 +10,7 @@ import {
   runOnJS,
   useAnimatedReaction,
   useSharedValue,
+  withDelay,
 } from "react-native-reanimated";
 import { consonants, vowels } from "../CONSTANTS";
 
@@ -51,11 +52,6 @@ export default function memo() {
     Nunito_500Medium,
   });
 
-  /*
-  const [exit, setExit] = useState(false);
-  const [reload, setReload] = useState(false);
-  useEffect(() => {}, [exit, reload]);
-  */
   const preCards = new Array(ITEMS).fill(null).map((_, i) => {
     return { id: Math.random() };
   });
@@ -67,17 +63,21 @@ export default function memo() {
   }, []);
 
   const cards = useSharedValue(preCards);
-  const clicked = useSharedValue();
-  const closeAll = useSharedValue();
+  const clicked = useSharedValue(null);
+  const closeAll = useSharedValue(null);
+  const twoAreOpened = useSharedValue(0);
   const route = useRouter();
 
   useAnimatedReaction(
     () => clicked.value,
     (d, p) => {
+      // console.log(d, p);
       if (d && p && d.slice(-2) !== p.slice(-2)) {
         closeAll.value = 1;
+        twoAreOpened.value = 0;
       } else if (d && p && d.slice(-2) === p.slice(-2)) {
         closeAll.value = 2;
+        twoAreOpened.value = 0;
       }
     }
   );
@@ -88,7 +88,13 @@ export default function memo() {
   return (
     <GestureHandlerRootView style={styles.container}>
       <Pressable
-        style={{ ...StyleSheet.absoluteFill, marginLeft: 20, marginTop: 40 }}
+        style={{
+          ...StyleSheet.absoluteFill,
+          width: 32,
+          height: 32,
+          marginLeft: 20,
+          marginTop: 40,
+        }}
         onPress={() => {
           // setExit((e) => !e);
           route.back("/");
@@ -111,6 +117,7 @@ export default function memo() {
               text={t}
               clicked={clicked}
               closeAll={closeAll}
+              twoAreOpened={twoAreOpened}
             />
           );
         })}

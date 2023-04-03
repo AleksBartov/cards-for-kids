@@ -45,7 +45,7 @@ export default function App() {
   return (
     <GestureHandlerRootView style={styles.container}>
       <Pressable
-        style={{ marginLeft: 20, marginTop: 40 }}
+        style={{ width: 32, height: 32, marginLeft: 20, marginTop: 40 }}
         onPress={() => route.back("/")}
       >
         <MaterialCommunityIcons
