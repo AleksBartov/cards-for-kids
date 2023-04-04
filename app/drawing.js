@@ -4,11 +4,12 @@ import { useRouter } from "expo-router";
 
 import { useFonts, Nunito_500Medium } from "@expo-google-fonts/nunito";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { Canvas, RoundedRect } from "@shopify/react-native-skia";
+import SkiaDrawingCards from "../components/drawing/SkiaDrawingCards";
 const { width } = Dimensions.get("window");
 
 const PADDING_HOR = 20;
 const PADDING_TOP = 120;
-const SIZE = width - PADDING_HOR * 2.2;
 
 export default function drawing() {
   let [fontsLoaded] = useFonts({
@@ -37,9 +38,7 @@ export default function drawing() {
           color="#EEF2F5"
         />
       </Pressable>
-      <View style={styles.card}>
-        <Text style={styles.text}>МА</Text>
-      </View>
+      <SkiaDrawingCards />
     </View>
   );
 }
@@ -52,18 +51,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#01569E",
     paddingHorizontal: PADDING_HOR,
     paddingTop: PADDING_TOP,
-  },
-  card: {
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#EEF2F5",
-    width: SIZE,
-    height: SIZE,
-    borderRadius: 10,
-  },
-  text: {
-    color: "#2C3941",
-    fontSize: SIZE - 160,
-    fontFamily: "Nunito_500Medium",
   },
 });
