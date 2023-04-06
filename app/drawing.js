@@ -4,7 +4,6 @@ import { useRouter } from "expo-router";
 
 import { useFonts, Nunito_500Medium } from "@expo-google-fonts/nunito";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { Canvas, RoundedRect } from "@shopify/react-native-skia";
 import SkiaDrawingCards from "../components/drawing/SkiaDrawingCards";
 const { width } = Dimensions.get("window");
 

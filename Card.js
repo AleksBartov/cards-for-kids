@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Platform, Dimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { Audio } from "expo-av";
 import Animated, {
   Easing,
-  runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
@@ -25,39 +23,6 @@ const BORDER_PADDING = 6;
 const DURATION = 250;
 
 export default function Card({ textArray, index, shuffleBack }) {
-  const [recording, setRecording] = useState();
-
-  async function startRecording() {
-    try {
-      console.log("Requesting permissions..");
-      await Audio.requestPermissionsAsync();
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
-
-      console.log("Starting recording..");
-      const { recording } = await Audio.Recording.createAsync(
-        Audio.RecordingOptionsPresets.HIGH_QUALITY
-      );
-      setRecording(recording);
-      console.log("Recording started");
-    } catch (err) {
-      console.error("Failed to start recording", err);
-    }
-  }
-
-  async function stopRecording() {
-    console.log("Stopping recording..");
-    setRecording(undefined);
-    await recording.stopAndUnloadAsync();
-    await Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-    });
-    const uri = recording.getURI();
-    console.log("Recording stopped and stored at", uri);
-  }
-
   const offset = useSharedValue({ x: 0, y: 0 });
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(-1000);
@@ -98,7 +63,6 @@ export default function Card({ textArray, index, shuffleBack }) {
       rotateX.value = withTiming(0);
       rotateZ.value = withTiming(0);
       scale.value = withTiming(1.1);
-      // runOnJS(startRecording)();
     })
     .onUpdate(({ translationX, translationY }) => {
       translateX.value = offset.value.x + translationX;
@@ -119,7 +83,6 @@ export default function Card({ textArray, index, shuffleBack }) {
           shuffleBack.value = true;
         }
       });
-      // runOnJS(stopRecording)();
     });
 
   const style = useAnimatedStyle(() => ({

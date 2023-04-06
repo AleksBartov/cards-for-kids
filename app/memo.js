@@ -5,7 +5,7 @@ import {
   View,
   Text,
   Modal,
-  Alert,
+  TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
@@ -14,13 +14,7 @@ import { useRouter } from "expo-router";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import MemoItem from "../components/memo/MemoItem";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import {
-  runOnJS,
-  useAnimatedReaction,
-  useDerivedValue,
-  useSharedValue,
-  withDelay,
-} from "react-native-reanimated";
+import { useAnimatedReaction, useSharedValue } from "react-native-reanimated";
 import { consonants, vowels } from "../CONSTANTS";
 
 const { width, height } = Dimensions.get("window");
@@ -32,12 +26,13 @@ const GAP = 12;
 
 export default function memo() {
   const [modalVisible, setModalVisible] = useState(false);
+  const [newGame, setNewGame] = useState(false);
   const [columns, setColumns] = useState(2);
 
   let [fontsLoaded] = useFonts({
     Nunito_500Medium,
   });
-  useEffect(() => {}, [columns, setColumns, modalVisible]);
+  useEffect(() => {}, [columns, setColumns, newGame, setNewGame, modalVisible]);
 
   const ITEM_SIZE = Math.floor(
     (width - PADDING_HOR * 2 - GAP * (columns - 1)) / columns
@@ -62,7 +57,6 @@ export default function memo() {
       return {
         text: l,
         id: i,
-        // color: "#" + (Math.random().toString(16) + "000000").substring(2, 8),
       };
     });
 
@@ -76,7 +70,6 @@ export default function memo() {
     return acc;
   }, []);
 
-  const cards = useDerivedValue(() => preCards);
   const clicked = useSharedValue(null);
   const closeAll = useSharedValue(null);
   const twoAreOpened = useSharedValue(0);
@@ -101,43 +94,51 @@ export default function memo() {
   }
   return (
     <GestureHandlerRootView style={styles.container}>
-      <Pressable
-        style={{
-          ...StyleSheet.absoluteFill,
-          width: 32,
-          height: 32,
-          marginLeft: 20,
-          marginTop: MARGIN_TOP_FOR_ICON,
-        }}
-        onPress={() => {
-          // setExit((e) => !e);
-          route.back("/");
-        }}
-      >
-        <MaterialCommunityIcons
-          name="keyboard-backspace"
-          size={32}
-          color="#EEF2F5"
-        />
-      </Pressable>
-      <Pressable
-        style={{
-          ...StyleSheet.absoluteFill,
-          width: 92,
-          height: 32,
-          transform: [{ translateX: width - 112 }],
-          marginTop: MARGIN_TOP_FOR_ICON,
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-          alignItems: "center",
-        }}
-        onPress={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <Text style={{ color: "#EEF2F5", fontSize: 22 }}>{columns}</Text>
-        <MaterialIcons name="keyboard-arrow-down" size={32} color="#EEF2F5" />
-      </Pressable>
+      <View style={styles.header}>
+        <Pressable
+          style={{ width: width * 0.33 }}
+          onPress={() => {
+            route.back("/");
+          }}
+        >
+          <MaterialCommunityIcons
+            name="keyboard-backspace"
+            size={32}
+            color="#EEF2F5"
+          />
+        </Pressable>
+
+        <TouchableOpacity
+          style={{
+            width: width * 0.33,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          onPress={() => {
+            setNewGame(true);
+            setTimeout(() => {
+              setNewGame(false);
+            }, 100);
+          }}
+        >
+          <Text style={{ color: "#ff5e5b", fontSize: 22 }}>новая игра</Text>
+        </TouchableOpacity>
+
+        <Pressable
+          style={{
+            width: width * 0.33,
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+          onPress={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <Text style={{ color: "#EEF2F5", fontSize: 22 }}>{columns}</Text>
+          <MaterialIcons name="keyboard-arrow-down" size={32} color="#EEF2F5" />
+        </Pressable>
+      </View>
       <Modal animationType="slide" transparent={true} visible={modalVisible}>
         <View
           style={{
@@ -184,7 +185,7 @@ export default function memo() {
         </View>
       </Modal>
       <View style={styles.box}>
-        {modalVisible
+        {modalVisible || newGame
           ? null
           : preCards.map((card, index) => {
               const t = letters[index];
@@ -221,6 +222,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: GAP,
+  },
+  header: {
+    ...StyleSheet.absoluteFill,
+    width,
+    height: 32,
+    marginTop: MARGIN_TOP_FOR_ICON,
+    paddingHorizontal: 30,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
   },
   modelContainer: {
     width,

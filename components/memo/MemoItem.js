@@ -2,8 +2,6 @@ import { StyleSheet, Text } from "react-native";
 import React from "react";
 import Animated, {
   FadeInUp,
-  SlideInUp,
-  SlideOutDown,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
