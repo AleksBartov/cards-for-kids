@@ -49,6 +49,16 @@ export default function index() {
           <Entypo name="pencil" size={ICON_SIZE} color="#EEF2F5" />
         </Pressable>
       </Animated.View>
+      <Animated.View entering={BounceInRight.delay(400).duration(DURATION)}>
+        <Pressable
+          style={styles.itemButton}
+          onPress={() => {
+            router.push("building");
+          }}
+        >
+          <Entypo name="radio" size={ICON_SIZE} color="#EEF2F5" />
+        </Pressable>
+      </Animated.View>
     </View>
   );
 }
@@ -63,8 +73,8 @@ const styles = StyleSheet.create({
   itemButton: {
     backgroundColor: "#2C3941",
     marginVertical: 20,
-    width: 200,
-    height: 200,
+    width: 160,
+    height: 160,
     borderRadius: 10,
     alignItems: "center",
     justifyContent: "center",
