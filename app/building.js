@@ -1,17 +1,16 @@
-import { StyleSheet, useWindowDimensions } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Pressable } from "react-native";
 import { useRouter } from "expo-router";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import Letters from "../components/building/Letters";
+import BuildingMain from "../components/building/BuildingMain";
 
 export default function building() {
   const route = useRouter();
-  const { width } = useWindowDimensions();
 
   return (
-    <GestureHandlerRootView style={styles.container}>
+    <View style={styles.container}>
+      <BuildingMain />
       <Pressable
         style={{
           ...StyleSheet.absoluteFillObject,
@@ -28,9 +27,7 @@ export default function building() {
           color="#EEF2F5"
         />
       </Pressable>
-      <MaterialCommunityIcons name="cat" size={width / 2} color="#EEF2F5" />
-      <Letters />
-    </GestureHandlerRootView>
+    </View>
   );
 }
 

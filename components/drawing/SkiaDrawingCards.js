@@ -12,7 +12,10 @@ import {
   Circle,
   FitBox,
   rect,
+  Skia,
+  PathOp,
 } from "@shopify/react-native-skia";
+import { createNoise2D } from "simplex-noise";
 
 const { width } = Dimensions.get("window");
 
@@ -21,15 +24,50 @@ const SIZE = width - PADDING_HOR * 2.2;
 
 const fontSize = width / 2;
 
+const drawNoisyCircle = (e) => {
+  const F = 1;
+  const R = 7;
+  const sample = 50;
+  const noise = createNoise2D();
+  const path = Skia.Path.Make();
+  for (let i = 0; i < sample; i++) {
+    const theta = (i / sample) * 2 * Math.PI;
+    const r = 2 * R + R * noise(theta * F, 0);
+    const x = r * Math.cos(theta);
+    const y = r * Math.sin(theta);
+    if (i === 0) {
+      path.moveTo(x, y);
+    } else {
+      path.lineTo(x, y);
+    }
+  }
+  path.close();
+  const m3 = Skia.Matrix();
+  m3.translate(e.x, e.y);
+  path.transform(m3);
+  return path;
+};
+
 export default function SkiaDrawingCards() {
   const cx = useValue(7.536);
   const cy = useValue(93.024);
+  const path = useValue(Skia.Path.Make());
   const font = useFont(require("../../assets/fontForDrawing.ttf"), fontSize);
 
   const touchHandler = useTouchHandler({
-    onActive: ({ x, y }) => {
-      cx.current = x;
-      cy.current = y;
+    onStart: (e) => {
+      path.current = Skia.Path.MakeFromOp(
+        path.current,
+        drawNoisyCircle(e),
+        PathOp.Union
+      );
+    },
+    onActive: (e) => {
+      path.current = Skia.Path.MakeFromOp(
+        path.current,
+        drawNoisyCircle(e),
+        PathOp.Union
+      );
     },
   });
   if (font === null) {
@@ -49,7 +87,7 @@ export default function SkiaDrawingCards() {
               r={10}
               color="rgba(255,255,255,.9)"
             />
-            <Circle cx={cx} cy={cy} r={60} color="red" />
+            <Path path={path} color="#01569E" />
           </Group>
         }
       >
@@ -60,7 +98,7 @@ export default function SkiaDrawingCards() {
           />
           <Path
             path="M111.877 93.024C109.829 93.024 108.165 92.5547 106.885 91.616C105.69 90.6773 104.965 89.44 104.709 87.904C104.453 86.2827 104.752 84.4907 105.605 82.528L139.397 7.64799C140.506 5.17333 141.829 3.424 143.365 2.39999C144.986 1.29066 146.821 0.735992 148.869 0.735992C150.832 0.735992 152.581 1.29066 154.117 2.39999C155.738 3.424 157.104 5.17333 158.213 7.64799L192.133 82.528C193.072 84.4907 193.413 86.2827 193.157 87.904C192.901 89.5253 192.176 90.8053 190.981 91.744C189.786 92.5973 188.208 93.024 186.245 93.024C183.856 93.024 181.978 92.4693 180.613 91.36C179.333 90.1653 178.181 88.3733 177.157 85.984L168.837 66.656L175.749 71.136H121.733L128.645 66.656L120.453 85.984C119.344 88.4587 118.192 90.2507 116.997 91.36C115.802 92.4693 114.096 93.024 111.877 93.024ZM148.613 19.552L130.693 62.176L127.365 58.08H170.117L166.917 62.176L148.869 19.552H148.613Z"
-            color="red"
+            color="white"
           />
         </FitBox>
       </Mask>
