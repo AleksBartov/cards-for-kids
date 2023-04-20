@@ -1,24 +1,21 @@
 import { StyleSheet, useWindowDimensions } from "react-native";
 import React from "react";
-import { Rect } from "@shopify/react-native-skia";
+import { Rect, Text, useComputedValue } from "@shopify/react-native-skia";
+import { createNoise3D } from "simplex-noise";
 
-export const COLUMNS = 8;
-export const ROWS = 8;
+const LETTERS = ["А", "М", "Р", "О", "У", "Б"];
 
-export default function Simbol({ i, j }) {
+export const COLUMNS = 3;
+export const ROWS = 5;
+
+export default function Simbol({ i, j, clock, font }) {
   const { width, height } = useWindowDimensions();
+  const noise = createNoise3D();
   const thisHeight = height * 0.55;
   const x = j * (width / COLUMNS);
   const y = i * (thisHeight / ROWS);
-  return (
-    <Rect
-      x={x}
-      y={y}
-      width={width / COLUMNS}
-      height={thisHeight / ROWS}
-      color={j % 2 === 0 ? "white" : "red"}
-    />
-  );
+  const text = LETTERS[Math.round(Math.random() * (LETTERS.length - 1))];
+  return <Text text={text} font={font} x={x} y={y} color="blue" />;
 }
 
 const styles = StyleSheet.create({});
