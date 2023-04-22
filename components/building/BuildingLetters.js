@@ -6,7 +6,7 @@ import {
   useClockValue,
   useFont,
 } from "@shopify/react-native-skia";
-import Simbol, { COLUMNS, ROWS } from "./Simbol";
+import Simbol, { COLUMNS, ROWS, TEXT_MARGIN } from "./Simbol";
 
 export default function BuildingLetters() {
   const { width, height } = useWindowDimensions();
@@ -22,7 +22,7 @@ export default function BuildingLetters() {
   }
   return (
     <Canvas style={{ flex: 1, width: width, height: height * 0.55 }}>
-      <Fill color="rgba(0,0,0,0.8)" />
+      <Fill color="#01569E" />
 
       {row.map((_, i) => {
         return col.map((__, j) => {

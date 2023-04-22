@@ -6,7 +6,7 @@ export default function BuildingImage() {
   const { width, height } = useWindowDimensions();
   return (
     <Canvas style={{ width: width, height: height * 0.45 }}>
-      <Fill color="green" />
+      <Fill color="#01569E" />
     </Canvas>
   );
 }

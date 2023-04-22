@@ -2,6 +2,11 @@ import { StyleSheet, View, useWindowDimensions } from "react-native";
 import React from "react";
 import BuildingImage from "./BuildingImage";
 import BuildingLetters from "./BuildingLetters";
+import Animated, {
+  FadeInUp,
+  ZoomInEasyUp,
+  ZoomInUp,
+} from "react-native-reanimated";
 
 export default function BuildingMain() {
   const { width: _width, height: _height } = useWindowDimensions();
@@ -21,14 +26,15 @@ export default function BuildingMain() {
       >
         <BuildingImage />
       </View>
-      <View
+      <Animated.View
+        entering={ZoomInEasyUp}
         style={{
           width: _width,
           height: _height * 0.55,
         }}
       >
         <BuildingLetters />
-      </View>
+      </Animated.View>
     </View>
   );
 }
